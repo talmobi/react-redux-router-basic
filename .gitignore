@@ -1,0 +1,8 @@
+node_modules/
+private/
+auth.json
+*.swo
+*.swp
+*.DS_STORE
+bundle.js
+*.log

@@ -1,0 +1,51 @@
+{
+  "name": "react-redux-router-basic",
+  "version": "0.0.0",
+  "description": "basic app with react, redux and react-router - browserify, livereload, nodemon",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha test/*.js",
+    "start": "node server.js",
+    "nodemon": "nodemon -d 2 server.js -i public/ -i node_modules/",
+    "build": "browserify -t [ babelify --presets [ es2015 react ] ] public/js/app.js -o public/bundle.js --verbose",
+    "watch": "watchify -t [ babelify --presets [ es2015 react ] ] public/js/app.js -o public/bundle.js --verbose",
+    "livereload": "livereloadx --exclude '.*' --include 'bundle.js' --exclude '*.{js,jsx}' public/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talmobi/react-redux-router-basic.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "react-router",
+    "browserify",
+    "basic",
+    "starter"
+  ],
+  "author": "talmobi <talmo.christian@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/talmobi/react-redux-router-basic/issues"
+  },
+  "homepage": "https://github.com/talmobi/react-redux-router-basic#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "redux": "^3.3.1",
+    "socket.io": "^1.4.5",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "deep-freeze": "0.0.1",
+    "expect": "^1.16.0",
+    "mocha": "^2.4.5",
+    "react-router": "^2.0.1",
+    "reactify": "^1.1.1",
+    "watchify": "^3.7.0"
+  }
+}
