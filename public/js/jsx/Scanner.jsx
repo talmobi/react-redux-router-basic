@@ -41,7 +41,7 @@ var BarcodeGunDevice = React.createClass({
             text: barcode
           })
           inputEl.value = "";
-        }, 200);
+        }, 20);
       }
     };
 
@@ -102,7 +102,27 @@ var Component = React.createClass({
   addScan: function (result) {
     // use redux, dispatch event for a new scan
     var store = this.props.store;
-    store.dispatch({ type: 'ADD_SCAN', code: result.text });
+    var currentState = store.getState();
+
+    var control_command_names = currentState.control_command_names;
+    var control_command_actions = currentState.control_command_actions;
+
+    // check for control commands
+    var code = result.text;
+
+    if (control_command_names[code]) {
+      // is a control command
+      var action = {
+        type: control_command_actions[code],
+        name: control_command_names[code],
+        code: result.text
+      };
+      store.dispatch( action );
+    } else {
+      // just add it to the list
+      store.dispatch({ type: 'ADD_SCAN', code: result.text });
+    }
+
 
     /* Using redux instead
     // result is a cordova.barcodeScanner plugin object
@@ -207,9 +227,11 @@ var Component = React.createClass({
     // map scans into react components
     var list = scans.map(function (val, ind, arr) {
       var code = val.code;
+      var type = val.name || val.type;
       return (
         <li key={ind} className="li-barcode">
           <span className="barcode">{code}</span>
+          <span className="action-type">{":" + type}</span>
         </li>
       );
     });
