@@ -5,6 +5,8 @@ var Redux = require('redux');
 var deepFreeze = require('deep-freeze');
 
 var extend = require('extend');
+
+// Cordova Android does not support Object.assign - use extend library
 Object = Object || {};
 Object.assign = extend;
 
@@ -57,7 +59,7 @@ var mainReducer = function (state = initialState, action) {
       break;
 
     case 'ADD_SCAN':
-        alert("--TEST STORE.DISPATCH ADD_SCAN--");
+        //alert("--TEST STORE.DISPATCH ADD_SCAN--");
         var scan = {
           code: action.code,
           created_at: Date.now()

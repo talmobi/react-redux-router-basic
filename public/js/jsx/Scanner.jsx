@@ -45,7 +45,9 @@ var BarcodeGunDevice = React.createClass({
       }
     };
 
+    /*
     // TODO Test, delete this
+    // tests working
     setTimeout(function () {
       for (var i = 0; i < 5; i++) {
         var code = 1000 + Math.floor(Math.random() * 10) * 10;
@@ -57,6 +59,8 @@ var BarcodeGunDevice = React.createClass({
       // is fired on Cordova Android
       //alert("--TEST BARCODES ADDED--");
     }, 3000);
+    */
+
   },
   render: function () {
     return (
