@@ -4,6 +4,10 @@ var Redux = require('redux');
 
 var deepFreeze = require('deep-freeze');
 
+var extend = require('extend');
+Object = Object || {};
+Object.assign = extend;
+
 if (location.hostname.indexOf('local') >= 0) {
   window.debug = true;
 }
@@ -39,17 +43,32 @@ var initialState = {
 
 deepFreeze( initialState );
 
-initialState = Object.assign({}, initialState, {
-  barcodes: initialState.barcodes.concat(["sucess"])
-});
+//initialState = Object.assign({}, initialState, {
+//  barcodes: initialState.barcodes.concat(["sucess"])
+//});
 
 var mainReducer = function (state = initialState, action) {
+  console.log("inside mainReducer function");
   switch (action.type) {
     case 'CONTROL_COMMAND_CANCEL':
         return Object.assign({}, state, {
           barcodes: state.barcodes.slice(0, state.barcodes.length - 1)
         });
       break;
+
+    case 'ADD_SCAN':
+        alert("--TEST STORE.DISPATCH ADD_SCAN--");
+        var scan = {
+          code: action.code,
+          created_at: Date.now()
+        };
+        console.log("scan: " + scan);
+        console.log("ADD_SCAN dispatched. barcodes.length was: " + state.barcodes.length);
+        return Object.assign({}, state, {
+          barcodes: state.barcodes.concat([scan])
+        });
+      break;
+
     default:
       return state;
   }

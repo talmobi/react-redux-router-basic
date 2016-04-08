@@ -24,7 +24,7 @@ var BarcodeGunDevice = React.createClass({
     }, 1000);
 
     var timeout = null;
-    window.onkeypress = function (e) {
+    inputEl.oninput = document.onkeyup = window.onkeypress = function (e) {
       // check if it's a number (probably a barcode)
       // and focus the input element if it is not focused
       if (e.which !== 0 && !inputEl.activeElement) {
@@ -44,6 +44,19 @@ var BarcodeGunDevice = React.createClass({
         }, 200);
       }
     };
+
+    // TODO Test, delete this
+    setTimeout(function () {
+      for (var i = 0; i < 5; i++) {
+        var code = 1000 + Math.floor(Math.random() * 10) * 10;
+        addScan({text: code});
+      };
+    }, 2000);
+
+    setTimeout(function () {
+      // is fired on Cordova Android
+      //alert("--TEST BARCODES ADDED--");
+    }, 3000);
   },
   render: function () {
     return (
@@ -54,6 +67,7 @@ var BarcodeGunDevice = React.createClass({
   }
 });
 
+var unsubscribe = null;
 var Component = React.createClass({
   getInitialState: function () {
     // NOTE! use redux instead?
@@ -61,17 +75,41 @@ var Component = React.createClass({
       scans: []
     }
   },
+  componentDidMount: function () {
+    var self = this; // closeu
+    var store = this.props.store;
+    // add top level redux store listener
+    unsubscribe = store.subscribe(function () {
+      var currentState = store.getState();
+
+      console.log("Scanner subscription callback");
+
+      // also re-renders after setting state
+      self.setState({
+        scans: currentState.barcodes.slice()
+      });
+    });
+  },
+  componentDidUnmount: function () {
+    console.log("SCANNER UNMOUNTED");
+    unsubscribe();
+  },
   // result {text}
   addScan: function (result) {
+    // use redux, dispatch event for a new scan
+    var store = this.props.store;
+    store.dispatch({ type: 'ADD_SCAN', code: result.text });
+
+    /* Using redux instead
     // result is a cordova.barcodeScanner plugin object
     var scan = {
       code: result.text,
       created_at: Date.now()
     };
-
     this.setState({
       scans: this.state.scans.concat([scan])
     });
+    */
     /* You could do this instead 
      * NOTE: But it is NOT recommended, since state
      * should be treated as it if were immutable!! (like redux)
@@ -154,6 +192,7 @@ var Component = React.createClass({
 
   },
   render: function () {
+    console.log("SCANNER REACT RENDERED");
     var store = this.props.store;
     //console.log("scanner store: " + store);
 
@@ -176,7 +215,7 @@ var Component = React.createClass({
         <button onClick={this.handleStartScan} className="large-button">START SCAN</button>
         <button onClick={this.handleSendToCloud} className="large-button">SEND TO CLOUD</button>
         <hr />
-        <BarcodeGunDevice addScan={this.addScan} />
+        <BarcodeGunDevice store={this.props.store} addScan={this.addScan} />
         <hr />
         <ul className="ul-barcode">
           {list}
