@@ -1,5 +1,7 @@
 var React = require('react');
 
+var Scanner = require('./Scanner.jsx');
+
 var Component = React.createClass({
   render: function () {
     var store = this.props.store;
@@ -10,6 +12,8 @@ var Component = React.createClass({
     return (
       <div>
         Home: {str}
+        <hr />
+        <Scanner store={store} />
       </div>
     );
   }
